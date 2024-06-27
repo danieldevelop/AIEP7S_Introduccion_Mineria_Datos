@@ -45,3 +45,41 @@ conn.commit()
 query = "SELECT precio, gastos_publicidad, cantidad_vendida FROM ventas"
 datos = pd.read_sql(query, conn)
 print(datos)
+
+
+#!Definir variable independiente (X) y variable dependiente (Y)
+X = datos[
+        ['precio', 'gastos_publicidad']
+    ]
+Y = datos['cantidad_vendida']
+
+
+#!Crear y entrena el modelo de regresión lineal
+modelo = LinearRegression()
+modelo.fit(X, Y)
+
+
+#!Obtener los coeficientes e interceptos
+coeficientes = modelo.coef_
+intercepto = modelo.intercept_
+print(f'\nCoeficientes: {coeficientes} and Intercepto: {intercepto}')
+
+
+#!Hacer predicciones
+predicciones = modelo.predict(X)
+
+
+#!Evaluar modelo
+mse = mean_squared_error(Y, predicciones)
+r2 = r2_score(Y, predicciones)
+
+print(f'\nMSE: {mse} and R^2 {r2}')
+
+
+#!Visualizar los resultados
+plt.scatter(datos['precio'], Y, color='blue', label='Datos reales')
+plt.plot(datos['precio'], predicciones, color='red', label='Predicciones')
+plt.xlabel('Precio')
+plt.ylabel('Cantidad vendida')
+plt.legend()
+plt.show()
